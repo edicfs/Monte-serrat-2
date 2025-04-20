@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Busca de Moradores - Monserrat II</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      padding: 1rem;
+      max-width: 600px;
+      margin: auto;
+    }
+    input {
+      width: 100%;
+      padding: 0.5rem;
+      margin-bottom: 1rem;
+      font-size: 1rem;
+    }
+    .resultado {
+      border: 1px solid #ccc;
+      border-radius: 8px;
+      padding: 0.8rem;
+      margin-bottom: 1rem;
+      background-color: #f9f9f9;
+    }
+    .codigo {
+      font-weight: bold;
+      color: #333;
+    }
+  </style>
+</head>
+<body>
+  <h1>Buscar Morador</h1>
+  <input type="text" id="busca" placeholder="Digite o nome ou número da casa...">
+  <div id="resultados"></div>
+
+  <script>
+    const moradores = [
+      { nome: "Família ALESSANDRA CRISTINA DA CRUZ", casa: "Rua A - Casa 01", ramais: ["100.11", "100.12"] },
+      { nome: "Família RAFAEL", casa: "Rua A - Lote 02 - Quadra A", ramais: ["100.21", "100.22"] },
+      { nome: "Família ADILSON", casa: "Rua A - Lote A - Quadra 03", ramais: ["100.31", "100.32", "100.33", "100.34"] },
+      { nome: "Família ANA PAULA", casa: "Rua A - Casa 04", ramais: ["100.41", "100.42", "100.43"] },
+      { nome: "Família BRUNO", casa: "Rua A - Casa 05", ramais: ["100.54", "100.55", "100.56"] },
+      { nome: "Família MARCO", casa: "Rua A - Casa 06", ramais: ["100.61"] },
+      { nome: "Família KÉSIA", casa: "Rua A - Casa 06", ramais: ["100.62", "100.63"] },
+      { nome: "Família FÁBIO VENDAS", casa: "Rua A - Casa 07", ramais: ["100.71", "100.72", "100.73"] },
+      { nome: "Família ANDRÉ DOMINGUES", casa: "Rua B - Casa 01", ramais: ["200.11", "200.12", "200.13"] },
+      { nome: "Família ARTHUR / LUIZ", casa: "Rua B - Lote 02 - Quadra B", ramais: ["200.21", "200.22", "200.23"] },
+      { nome: "Família RONALDO WILLIAN", casa: "Rua B - Casa 03", ramais: ["200.31", "200.32", "200.33", "200.34"] },
+      { nome: "Família SERGINHO", casa: "Rua B - Casa 03", ramais: ["200.35", "200.36", "200.37", "200.38"] },
+      { nome: "Família JOAQUIM JÚNIOR", casa: "Rua B - Casa 04", ramais: ["200.41", "200.42", "200.43", "200.44"] },
+      { nome: "Família DANIEL E ELAINE", casa: "Rua B - Quadra B - Lote 04", ramais: ["200.45", "200.46", "200.47"] },
+      { nome: "Família VICTOR", casa: "Rua B - Quadra C - Casa 05", ramais: ["200.51", "200.52", "200.53", "200.54"] },
+      { nome: "Família PAULO ROBERTO LEMOS DA SILVA", casa: "Rua B - Bloco B - Casa 05", ramais: ["200.55", "200.56", "200.57"] },
+      { nome: "Família JACKSON PAGEHU", casa: "Rua B - Casa 06", ramais: ["200.61", "200.62", "200.63", "200.64"] },
+      { nome: "Família MÁRCIO ROCHA", casa: "Rua B - Casa 07", ramais: ["200.71", "200.72"] },
+      { nome: "Família FRANCISCO", casa: "Rua B - Quadra B - Casa 07", ramais: ["200.73", "200.74"] },
+      { nome: "Família TARCÍSIO CANSANÇÃO", casa: "Rua B - Lote 08", ramais: ["200.81", "200.82"] },
+      { nome: "Família LUIZ", casa: "Rua B - Casa 09", ramais: ["200.91", "200.92", "200.93"] },
+      { nome: "Família RODRIGO CÔRTES", casa: "Rua B - Quadra B - Casa 09", ramais: ["200.94", "200.95", "200.96", "200.97"] },
+      { nome: "Família CLÁUDIA", casa: "Rua C - Casa 01", ramais: ["300.11"] },
+      { nome: "Família MÁRCIO", casa: "Rua C - Casa 01", ramais: ["300.12", "300.13", "300.14", "300.15", "300.16"] },
+      { nome: "Família REGINA", casa: "Rua C - Casa 02", ramais: ["300.21"] },
+      { nome: "Família JÓIA", casa: "Rua C - Casa 03", ramais: ["300.31", "300.32"] },
+      { nome: "Família MATHEUS", casa: "Rua C - Casa 03", ramais: ["300.33", "300.34"] },
+      { nome: "Família EMANOEL", casa: "Rua C - Casa 03", ramais: ["300.35", "300.36"] },
+      { nome: "Família FÁBIO", casa: "Rua C - Casa 04", ramais: ["300.41", "300.42"] },
+      { nome: "Família SENIA AZEVEDO", casa: "Rua C - Casa 05", ramais: ["300.51", "300.52"] },
+      { nome: "Família SULIVAN", casa: "Rua C - Casa 07", ramais: ["300.71", "300.72"] },
+      { nome: "Família ANDERSON", casa: "Rua C - Casa 08", ramais: ["300.81", "300.82"] },
+      { nome: "Família LUIZ NASCIMENTO E PATRÍCIA", casa: "Rua C - Casa 09", ramais: ["300.91", "300.92", "300.93", "300.94"] },
+      { nome: "Família BETO", casa: "Rua C - Casa 10", ramais: ["300.101", "300.102", "300.103"] },
+      { nome: "Família DIEGO GEOVANI", casa: "Rua C - Casa 10", ramais: ["300.104", "300.105", "300.106"] },
+      { nome: "Família JORGE", casa: "Rua C - Casa 10 Frente", ramais: ["300.107", "300.108"] },
+      { nome: "Família MARCELO BRAZ", casa: "Rua C - Casa 11", ramais: ["300.111", "300.112", "300.113"] },
+      { nome: "Família VALESCA ARAUJO", casa: "Rua C - Casa 11", ramais: ["300.114", "300.115", "300.116"] },
+      { nome: "Família CAMILA DAS NEVES", casa: "Rua C - Casa 12", ramais: ["300.121", "300.122"] },
+      { nome: "Família RONI", casa: "Rua C - Casa 14", ramais: ["300.141", "300.142"] },
+      { nome: "Família ROGÉRIO", casa: "Rua C - Casa 16", ramais: ["300.161", "300.162"] },
+      { nome: "Família ANDREZA MARAÍSA", casa: "Rua C - Casa 16", ramais: ["300.163", "300.164", "300.165"] },
+      { nome: "Família JOSÉ JERÔNIMO", casa: "Rua C - Casa 17", ramais: ["300.171", "300.172", "300.173"] },
+      { nome: "Família ROSANE", casa: "Rua C - Casa 18", ramais: ["300.181"] },
+      { nome: "Família JÚLIO", casa: "Rua C - Casa 19", ramais: ["300.191", "300.192", "300.193"] }
+    ];
+
+    const busca = document.getElementById('busca');
+    const resultados = document.getElementById('resultados');
+
+    busca.addEventListener('input', () => {
+      const termo = busca.value.toLowerCase();
+      resultados.innerHTML = '';
+
+      moradores.filter(m =>
+        m.nome.toLowerCase().includes(termo) ||
+        m.casa.toLowerCase().includes(termo)
+      ).forEach(m => {
+        const lista = m.ramais.map(r => `<li>${r}</li>`).join('');
+        resultados.innerHTML += `
+          <div class="resultado">
+            <div><strong>${m.nome}</strong></div>
+            <div>${m.casa}</div>
+            <div class="codigo">Códigos do interfone:</div>
+            <ul>${lista}</ul>
+          </div>
+        `;
+      });
+    });
+  </script>
+</body>
+</html>
